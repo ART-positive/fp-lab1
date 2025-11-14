@@ -1,11 +1,11 @@
 (ns my-app.euler08-test
   (:require [clojure.test :refer [deftest is testing]]
             [my-app.euler08 :refer [digits
-                                     recursive
-                                     tailrec
-                                     mapindexed
-                                     lazy
-                                     str-input]]))
+                                    recursive
+                                    tailrec
+                                    mapindexed
+                                    lazy
+                                    str-input]]))
 
 (deftest a-test
   (testing "FIXME, I fail."
