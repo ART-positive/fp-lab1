@@ -1,6 +1,6 @@
 (ns my-app.euler08-test
   (:require [clojure.test :refer [deftest is testing]]
-            [my-app.core :refer [digits
+            [my-app.euler08 :refer [digits
                                  recursive
                                  tailrec
                                  mapindexed
