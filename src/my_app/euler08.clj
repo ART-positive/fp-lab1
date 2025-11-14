@@ -1,8 +1,8 @@
-(ns my-app.core
+(ns my-app.euler08
   (:gen-class)
   (:require [clojure.string :as str]))
 
-(def thousand-digit-str
+(def str
   (str/replace
    "73167176531330624919225119674426574742355349194934
      96983520312774506326239578318016984801869478851843
@@ -26,15 +26,15 @@
      71636269561882670428252483600823257530420752963450"
    #"\s+" ""))
 
-(defn digits-from-string [s]
+(defn digits [s]
   (->> s
        seq ; \a \1 \b \2 ...
        (filter #(Character/isDigit ^Character %))
        (map #(Character/digit ^Character % 10))))
 
-(defn max-product-recursive-standalone
+(defn recursive
   [s n]
-  (let [digits-vec (vec (digits-from-string s))
+  (let [digits-vec (vec (digits s))
         len (count digits-vec)
         rec (fn rec [i]
               (if (> (+ i n) len)
@@ -46,9 +46,9 @@
                   (max p (rec (inc i))))))]
     (rec 0)))
 
-(defn max-product-tailrec-standalone
+(defn tailrec
   [s n]
-  (let [digits-vec (vec (digits-from-string s))
+  (let [digits-vec (vec (digits s))
         len (count digits-vec)]
     (loop [i 0 best 0]
       (if (> (+ i n) len)
@@ -59,9 +59,9 @@
                     (recur (inc j) (* acc (nth digits-vec j)))))]
           (recur (inc i) (if (> p best) p best)))))))
 
-(defn max-product-mapindexed-standalone
+(defn mapindexed
   [s n]
-  (let [digits-vec (vec (digits-from-string s))
+  (let [digits-vec (vec (digits s))
         len (count digits-vec)
         last-start (max 0 (inc (- len n)))]
     (->> (range 0 last-start)
@@ -72,7 +72,7 @@
 
 (defn lazy
   [s n]
-  (let [digits (digits-from-string s)]
+  (let [digits (digits s)]
     (->> (partition n 1 digits)
          (filter (fn [w] (not-any? zero? w)))
          (map (fn [w] (reduce * 1 w)))
@@ -80,8 +80,8 @@
 
 (defn -main
   [& _args]
-  (let [n 13 s thousand-digit-str]
-    (println "recursive->" (max-product-recursive-standalone s n))
-    (println "tailrec  ->" (max-product-tailrec-standalone s n))
-    (println "mapidx   ->" (max-product-mapindexed-standalone s n))
+  (let [n 13 s str]
+    (println "recursive->" (recursive s n))
+    (println "tailrec  ->" (tailrec s n))
+    (println "mapidx   ->" (mapindexed s n))
     (println "lazy     ->" (lazy s n))))

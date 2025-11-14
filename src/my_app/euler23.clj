@@ -1,6 +1,6 @@
-(ns my-app.23)
+(ns my-app.euler23)
 
-(defn sum-proper-divs
+(defn divs
   "сумма собственных делителей n"
   [n]
   (cond
@@ -19,7 +19,7 @@
   [n]
   (> (sum-proper-divs n) n))
 
-(defn sum-of-non-summable
+(defn summable
   "на вход limit и boolean-массив can-be, где true означает: можно представить как сумму двух abundant.
    Возвращает сумму всех k от 1 до limit, для которых can-be[k] == false"
   [limit can-be]
@@ -28,7 +28,7 @@
       acc
       (recur (inc k) (if (aget can-be k) acc (+ acc k))))))
 
-(defn sum-non-abundant-modular
+(defn modular
   "берём все abundant <= limit, помечаем все суммы a+b<=limit
    в примитивном boolean массиве — затем суммируем непомеченные числа"
   [limit]
@@ -39,7 +39,7 @@
             :let [s (+ (abunds i) (abunds j))]
             :when (<= s limit)]
       (aset can-be s true))
-    (sum-of-non-summable limit can-be)))
+    (summable limit can-be)))
 
 (defn sum-non-abundant-tailrec
   "хвостовая: проходим i от 1 до limit, поддерживаем вектор abundant и
@@ -48,8 +48,8 @@
   (let [can-be (boolean-array (inc limit))]
     (loop [i 1, abunds []]
       (if (> i limit)
-        (sum-of-non-summable limit can-be)
-        (let [s (sum-proper-divs i)]
+        (summable limit can-be)
+        (let [s (divs i)]
           (if (<= s i)
             (recur (inc i) abunds)
             (do
@@ -60,15 +60,15 @@
               (when (<= (+ i i) limit) (aset can-be (+ i i) true))
               (recur (inc i) (conj abunds i)))))))))
 
-(defn sum-non-abundant-recursive
+(defn recursive
   "Рекурсивно, с trampoline"
   [limit]
   (let [can-be (boolean-array (inc limit))
         step (fn step [i abunds]
                (fn []
                  (if (> i limit)
-                   (sum-of-non-summable limit can-be)
-                   (let [s (sum-proper-divs i)]
+                   (summable limit can-be)
+                   (let [s (divs i)]
                      (if (<= s i)
                        (step (inc i) abunds)
                        (do
@@ -80,23 +80,23 @@
                          (step (inc i) (conj abunds i))))))))]
     (trampoline (step 1 []))))
 
-(def abundant-seq
+(def seq
   "Ленивая бесконечная последовательность всех abundant"
   (->> (iterate inc 1) (filter abundant?)))
 
-(defn sum-non-abundant-lazy
+(defn lazy
   "Берём ленивую последовательность abundant, отсекаем до limit, генерируем суммы и считаем."
   [limit]
-  (let [abunds (->> abundant-seq (take-while #(<= % limit)) vec)
+  (let [abunds (->> seq (take-while #(<= % limit)) vec)
         sums   (->> (for [a abunds, b abunds :let [s (+ a b)] :when (<= s limit)] s) set)]
     (reduce (fn [acc k] (if (contains? sums k) acc (+ acc k))) 0 (range 1 (inc limit)))))
 
 (defn ^:export -main
   []
   (let [limit 28123
-        impls [["modular" sum-non-abundant-modular]
-               ["tailrec" sum-non-abundant-tailrec]
-               ["recursive" sum-non-abundant-recursive]
-               ["lazy" sum-non-abundant-lazy]]]
+        impls [["modular" modular]
+               ["tailrec" tailrec]
+               ["recursive" recursive]
+               ["lazy" lazy]]]
     (doseq [[name f] impls]
       (println (format "%-8s -> %d" name (f limit))))))
