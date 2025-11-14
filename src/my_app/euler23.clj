@@ -80,14 +80,14 @@
                          (step (inc i) (conj abunds i))))))))]
     (trampoline (step 1 []))))
 
-(def seq
+(def ab-seq
   "Ленивая бесконечная последовательность всех abundant"
   (->> (iterate inc 1) (filter abundant?)))
 
 (defn lazy
   "Берём ленивую последовательность abundant, отсекаем до limit, генерируем суммы и считаем."
   [limit]
-  (let [abunds (->> seq (take-while #(<= % limit)) vec)
+  (let [abunds (->> ab-seq (take-while #(<= % limit)) vec)
         sums   (->> (for [a abunds, b abunds :let [s (+ a b)] :when (<= s limit)] s) set)]
     (reduce (fn [acc k] (if (contains? sums k) acc (+ acc k))) 0 (range 1 (inc limit)))))
 
