@@ -2,7 +2,7 @@
   (:gen-class)
   (:require [clojure.string :as str]))
 
-(def str
+(def str-input
   (str/replace
    "73167176531330624919225119674426574742355349194934
      96983520312774506326239578318016984801869478851843
@@ -80,7 +80,7 @@
 
 (defn -main
   [& _args]
-  (let [n 13 s str]
+  (let [n 13 s str-input]
     (println "recursive->" (recursive s n))
     (println "tailrec  ->" (tailrec s n))
     (println "mapidx   ->" (mapindexed s n))
