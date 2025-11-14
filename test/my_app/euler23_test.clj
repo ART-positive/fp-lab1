@@ -1,10 +1,10 @@
 (ns my-app.euler23-test
   (:require [clojure.test :refer [deftest is testing]]
             [my-app.euler23 :refer [divs abundant?
-                               modular
-                               tailrec
-                               recursive
-                               lazy]]))
+                                    modular
+                                    tailrec
+                                    recursive
+                                    lazy]]))
 
 (deftest divisors-and-abundant-tests
   (testing "sum-proper-divs basic cases"
