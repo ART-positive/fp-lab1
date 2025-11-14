@@ -1,6 +1,6 @@
 (ns my-app.euler23-test
   (:require [clojure.test :refer [deftest is testing]]
-            [my-app.23 :refer [divs abundant?
+            [my-app.euler23 :refer [divs abundant?
                                modular
                                tailrec
                                recursive
