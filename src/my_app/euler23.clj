@@ -17,7 +17,7 @@
 (defn abundant?
   "true если n избыточное"
   [n]
-  (> (sum-proper-divs n) n))
+  (> (divs n) n))
 
 (defn summable
   "на вход limit и boolean-массив can-be, где true означает: можно представить как сумму двух abundant.
