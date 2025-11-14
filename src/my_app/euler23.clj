@@ -41,7 +41,7 @@
       (aset can-be s true))
     (summable limit can-be)))
 
-(defn sum-non-abundant-tailrec
+(defn tailrec
   "хвостовая: проходим i от 1 до limit, поддерживаем вектор abundant и
    boolean массив can-be, который обновляем при обнаружении каждого нового abundant"
   [limit]
